@@ -204,7 +204,8 @@ public class Level {
 		Water fw = new Water(col, row, tileSize, tileset.getImage("Falling_water"), this, 0);
 		map.addTile(col,row, w);
 		//check to see if we should go down and if we can do that
-		if (){
+		if (row+1 < map.getTiles()[0].length && map.getTiles()[col][row-1] instanceof Water == false){
+			water(col+1, row, map, 0);
 		}
 		//otherwise
 		else{
