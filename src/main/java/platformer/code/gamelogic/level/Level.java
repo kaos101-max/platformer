@@ -204,17 +204,19 @@ public class Level {
 		Water fw = new Water(col, row, tileSize, tileset.getImage("Falling_water"), this, 0);
 		map.addTile(col,row, w);
 		//check to see if we should go down and if we can do that
-		if (row+1 < map.getTiles()[0].length && map.getTiles()[col][row-1] instanceof Water == false){
-			water(col+1, row, map, 0);
+		if (row+1 < map.getTiles()[0].length && map.getTiles()[col][row+1] instanceof Water == false && !map.getTiles()[col][row+1].isSolid()){
+			water(col, row+1, map, 0);
 		}
 		//otherwise
 		else{
+			System.out.println(map.getTiles()[col+1][row] instanceof Water == false);
 			//right
-			if(col+1 < map.getTiles().length && map.getTiles()[col+1][row] instanceof Water == false && map.getTiles()[col+1][row].isSolid() != false){
+			if(col+1 < map.getTiles().length && map.getTiles()[col+1][row] instanceof Water == false && !map.getTiles()[col+1][row].isSolid()){
+				
 				water(col+1, row, map, 3);
 			}
 			//left
-			if(col-1 >= 0 && map.getTiles()[col-1][row] instanceof Water == false && map.getTiles()[col-1][row].isSolid() != false){
+			if(col-1 >= 0 && map.getTiles()[col-1][row] instanceof Water == false && !map.getTiles()[col-1][row].isSolid()){
 				water(col-1, row, map, 3);
 			}
 		}
