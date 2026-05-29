@@ -202,7 +202,18 @@ public class Level {
 		Water hw = new Water(col, row, tileSize, tileset.getImage("Half_water"), this,2);
 		Water qw = new Water(col, row, tileSize, tileset.getImage("Quarter_water"), this,1);
 		Water fw = new Water(col, row, tileSize, tileset.getImage("Falling_water"), this, 0);
-		map.addTile(col,row, w);
+		if(fullness == 3){
+			map.addTile(col,row, w);
+		}
+		else if (fullness == 2){
+			map.addTile(col,row, hw);
+		}
+		else if (fullness == 1){
+			map.addTile(col,row, qw);
+		}
+		else if (fullness == 0){
+			map.addTile(col,row, fw);
+		}
 		//check to see if we should go down and if we can do that
 		if (row+1 < map.getTiles()[0].length && map.getTiles()[col][row+1] instanceof Water == false && !map.getTiles()[col][row+1].isSolid()){
 			water(col, row+1, map, 0);
