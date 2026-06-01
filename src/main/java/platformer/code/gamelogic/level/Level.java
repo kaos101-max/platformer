@@ -219,16 +219,26 @@ public class Level {
 			water(col, row+1, map, 0);
 		}
 		//otherwise
-		else{
+		
+		else if (row+1 < map.getTiles()[0].length && map.getTiles()[col][row+1] instanceof Water == false){
 			System.out.println(map.getTiles()[col+1][row] instanceof Water == false);
 			//right
 			if(col+1 < map.getTiles().length && map.getTiles()[col+1][row] instanceof Water == false && !map.getTiles()[col+1][row].isSolid()){
-				
-				water(col+1, row, map, 3);
+				if (fullness == 3){
+					water(col+1, row, map, 3);
+				}
+				if (fullness == 2){
+					water(col+1, row, map, 2);
+				}
+				if (fullness == 1){
+					water(col+1, row, map, 1);
+				}
 			}
 			//left
 			if(col-1 >= 0 && map.getTiles()[col-1][row] instanceof Water == false && !map.getTiles()[col-1][row].isSolid()){
 				water(col-1, row, map, 3);
+				water(col-1, row, map, 2);
+				water(col-1, row, map, 1);
 			}
 		}
 	}
