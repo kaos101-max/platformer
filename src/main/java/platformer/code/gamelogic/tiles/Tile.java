@@ -32,7 +32,9 @@ public class Tile{
 		
 		if(hitbox != null) hitbox.draw(g);		
 	}
-	
+	public void setImage(BufferedImage image) {
+    	this.image = image;
+	}
 	
 	
 	//------------------------------------Getters
