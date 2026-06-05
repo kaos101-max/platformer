@@ -1,5 +1,7 @@
 package platformer.code.gamelogic.level;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,8 @@ public class Level {
 
 	private ArrayList<Enemy> enemiesList = new ArrayList<>();
 	private ArrayList<Flower> flowers = new ArrayList<>();
+	//??
+	private ArrayList<Water> waters = new ArrayList<>();
 
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
@@ -45,6 +49,8 @@ public class Level {
 	private int tileSize;
 	private Tileset tileset;
 	public static float GRAVITY = 70;
+	private long waterTimer = 0;
+	private tiemAmount = 5;
 
 	public Level(LevelData leveldata) {
 		this.leveldata = leveldata;
@@ -178,6 +184,20 @@ public class Level {
 					i--;
 				}
 			}
+			//water
+			for (int i= 0; i < waters.size(); i++){
+				if (waters.get(i).getHitbox().isIntersecting(player.getHitbox())){
+					if(waterTimer == 0){
+						waterTimer = System.currentTimeMillis();
+					}
+					else{
+						if((System.currentTimeMillis()-waterTimer)/1000 >= timeAmount){
+							//Whatever should happen if you run
+							waterTimer = 0;
+						}
+					}
+				}
+			}
 
 			// Update the enemies
 			for (int i = 0; i < enemies.length; i++) {
@@ -292,6 +312,9 @@ public class Level {
 	   			 if (camera.isVisibleOnCamera(tile.getX(), tile.getY(), tile.getSize(), tile.getSize()))
 	   				 tile.draw(g);
 	   		 }
+			 g.setColor(Color.GREEN);
+			 g.setFont(new Font("Arial", Font.BOLD, 40));
+			 g.drawString(System.currentTimeMillis()-waterTimer/1000)+"",(int)player.getX(), (int)player.getY();
 	   	 }
 
 	   	 // Draw the enemies
