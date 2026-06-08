@@ -50,7 +50,7 @@ public class Level {
 	private Tileset tileset;
 	public static float GRAVITY = 70;
 	private long waterTimer = 0;
-	private tiemAmount = 5;
+	private long timeAmount = 5;
 
 	public Level(LevelData leveldata) {
 		this.leveldata = leveldata;
@@ -314,7 +314,7 @@ public class Level {
 	   		 }
 			 g.setColor(Color.GREEN);
 			 g.setFont(new Font("Arial", Font.BOLD, 40));
-			 g.drawString(System.currentTimeMillis()-waterTimer/1000)+"",(int)player.getX(), (int)player.getY();
+			 g.drawString((System.currentTimeMillis()-waterTimer)/1000+"",(int)player.getX(), (int)player.getY());
 	   	 }
 
 	   	 // Draw the enemies
