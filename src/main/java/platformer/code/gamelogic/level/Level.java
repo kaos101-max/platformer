@@ -272,7 +272,22 @@ public class Level {
 	}
 	//Adds gas tiles until the requisite number of squares are filled or there is no more room 
 	private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
-		
+		Gas g = new Gas(col, row, tileSize, tileset.getImage("Gas_one"), this, 0);
+		map.addTile(col, row, g);
+
+		//add a loop above it to make all following blocks
+		//make the 3x3 shape of gas first 
+		//for (int row = 0; row > 3; row++){
+			//for (int col = 0; row > 3; col++){	
+			//} 
+		//}
+		// {col, row}
+		int[][] moves = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+		for (int i = 0; i < moves.length; i++){
+			if (col + moves[i]){
+				
+			}
+		}
 	}	
 	public void draw(Graphics g) {
 	   	 g.translate((int) -camera.getX(), (int) -camera.getY());
