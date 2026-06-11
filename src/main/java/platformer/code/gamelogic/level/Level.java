@@ -282,11 +282,16 @@ public class Level {
 			//} 
 		//}
 		// {col, row}
-		int[][] moves = {{-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {0, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}};
+		int[][] moves = {{0, -1}, {1, -1}, {-1, -1}, {1, 0}, {-1, 0}, {0, 1}, {1, 1}, {-1, 1}};
 		for (int i = 0; i < moves.length; i++){
-			if (col + moves[i]){
-				
-			}
+			//in bounds
+			if (col + moves[i][0] < map.getTiles().length && col + moves[i][0] >= 0 && 
+			   row + moves[i][1] >= 0 && row + moves[i][1] < map.getTiles()[0].length){
+				// is it already gas? is it already solid?	
+				if (!map.getTiles()[col + moves[i][0]][row + moves[i][1]].isSolid() && instanceof Gas == false){
+
+				}
+			   }
 		}
 	}	
 	public void draw(Graphics g) {
