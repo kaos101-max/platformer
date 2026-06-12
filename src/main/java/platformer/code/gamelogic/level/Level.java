@@ -276,27 +276,28 @@ public class Level {
 		Gas g = new Gas(col, row, tileSize, tileset.getImage("Gas_one"), this, 0);
 		map.addTile(col, row, g);
 		placedThisRound.add(g);
+		 numSquaresToFill -=1;
 		//add a loop above it to make all following blocks
 		//make the 3x3 shape of gas first 
 		// {col, row}
 		int[][] moves = {{0, -1}, {1, -1}, {-1, -1}, {1, 0}, {-1, 0}, {0, 1}, {1, 1}, {-1, 1}};
-		while(placedThisRound.isEmpty()){
+		while(!placedThisRound.isEmpty() && numSquaresToFill>0){
 			row = placedThisRound.get(0).getRow();
 			col = placedThisRound.get(0).getCol();
 			placedThisRound.remove(0);
-		for (int i = 0; i < moves.length; i++){
-			//in bounds
-			if (col + moves[i][0] < map.getTiles().length && col + moves[i][0] >= 0 && 
-			   row + moves[i][1] >= 0 && row + moves[i][1] < map.getTiles()[0].length){
-				// is it already gas? is it already solid?	
-				if (!map.getTiles()[col + moves[i][0]][row + moves[i][1]].isSolid() 
-					&& !(map.getTiles()[col + moves[i][0]][row + moves[i][1]] instanceof Gas)){
-						g = new Gas(col + moves[i][0], row + moves[i][1], tileSize, tileset.getImage("Gas_one"), this, 0);
-						map.addTile(col + moves[i][0], row + moves[i][1], g);
-						placedThisRound.add(g);
-					}
-			   }
-		}
+			for (int i = 0; i < moves.length; i++){
+				//in bounds
+				if (col + moves[i][0] < map.getTiles().length && col + moves[i][0] >= 0 && 
+				row + moves[i][1] >= 0 && row + moves[i][1] < map.getTiles()[0].length){
+					// is it already gas? is it already solid?	
+					if (!map.getTiles()[col + moves[i][0]][row + moves[i][1]].isSolid() 
+						&& !(map.getTiles()[col + moves[i][0]][row + moves[i][1]] instanceof Gas)){
+							g = new Gas(col + moves[i][0], row + moves[i][1], tileSize, tileset.getImage("Gas_one"), this, 0);
+							map.addTile(col + moves[i][0], row + moves[i][1], g);
+							placedThisRound.add(g);
+						}
+				}
+			}
 		}
 	}	
 	private void Gas(int col, int row, int tileSize2, BufferedImage image, Level level, int i) {
