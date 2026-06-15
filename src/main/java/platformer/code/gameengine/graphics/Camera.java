@@ -16,6 +16,8 @@ public class Camera {
 	
 	private int width;
 	private int height;
+
+	public boolean isGas = false;
 	
 	private float velocityX = 1.6f; 
 	private float velocityY = 1.6f;
@@ -96,8 +98,14 @@ public class Camera {
 	}
 	
 	public boolean isVisibleOnCamera(float x, float y, int width, int height) {
+		if(!isGas){
 		if(x + width > position.x && x < position.x + this.width && y + height > position.y && y < position.y + this.height) return true;
 		return false;
+		}
+		else{
+			if(x + width > position.x + 50 && x < position.x + this.width && y + height > position.y+300 && y < position.y + this.height) return true;
+		return false;
+		}
 	}
 	
 	//--------------------------------Getters

@@ -14,6 +14,16 @@ public class Vector2D {
 		this.x = x;
 		this.y = y;
 	}
+
+	public static boolean isClose(float x1, float y1, float x2, float y2, float distance){
+		float actualDistance = (float) Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+		if(actualDistance<distance){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 	
 	@Override
 	public String toString() {

@@ -11,6 +11,7 @@ import platformer.code.gameengine.PhysicsObject;
 import platformer.code.gameengine.graphics.Camera;
 import platformer.code.gameengine.loaders.Mapdata;
 import platformer.code.gameengine.loaders.Tileset;
+import platformer.code.gameengine.maths.Vector2D;
 import platformer.code.gamelogic.GameResources;
 import platformer.code.gamelogic.Main;
 import platformer.code.gamelogic.enemies.Enemy;
@@ -40,6 +41,7 @@ public class Level {
 	private ArrayList<Flower> flowers = new ArrayList<>();
 	//??
 	private ArrayList<Water> waters = new ArrayList<>();
+	private ArrayList<Gas> gases = new ArrayList<>();
 
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
@@ -67,6 +69,7 @@ public class Level {
 	}
 
 	public void restartLevel() {
+		waters.clear();
 		int[][] values = mapdata.getValues();
 		Tile[][] tiles = new Tile[width][height];
 
@@ -151,7 +154,6 @@ public class Level {
 		playerDead = true;
 		throwPlayerDieEvent();
 	}
-
 	public void onPlayerWin() {
 		active = false;
 		playerWin = true;
@@ -185,20 +187,49 @@ public class Level {
 					i--;
 				}
 			}
+			boolean touchedWater = false;
 			//water
 			for (int i= 0; i < waters.size(); i++){
 				if (waters.get(i).getHitbox().isIntersecting(player.getHitbox())){
-					if(waterTimer == 0){
-						waterTimer = System.currentTimeMillis();
-					}
-					else{
-						if((System.currentTimeMillis()-waterTimer)/1000 >= timeAmount){
-							//Whatever should happen if you run
-							waterTimer = 0;
-						}
-					}
+					touchedWater = true;
+					// if(waterTimer == 0){
+					// 	waterTimer = System.currentTimeMillis();
+					// }
+					// else{
+					// 	if((System.currentTimeMillis()-waterTimer)/1000 >= timeAmount){
+					// 		//Whatever should happen if you run
+					// 		waterTimer = 0;
+					// 	}
+					// }
 				}
 			}
+			if(touchedWater){
+				player.isJumping = true;
+
+					player.movementVector.y -= (Level.GRAVITY * Level.GRAVITY) * tslf + 2;
+			}
+			//gas
+			boolean touchedGas = false;
+			for (int i= 0; i < gases.size(); i++){
+				if (gases.get(i).getHitbox().isIntersecting(player.getHitbox())){
+					camera.isGas = true;
+					System.out.println("I'm in gas");
+					touchedGas = true;
+				}
+				if(Vector2D.isClose(gases.get(i).getX(), gases.get(i).getY(), player.getX(), player.getY(), 200)){
+					gases.get(i).setIntensity(2);
+					 gases.get(i).setImage(tileset.getImage("GasThree"));
+				}else{
+					gases.get(i).setIntensity(1);
+					 gases.get(i).setImage(tileset.getImage("GasOne"));
+				}
+
+
+			}
+			if (!touchedGas){
+				camera.isGas = false;
+			}
+
 
 			// Update the enemies
 			for (int i = 0; i < enemies.length; i++) {
@@ -228,15 +259,19 @@ public class Level {
 		Water fw = new Water(col, row, tileSize, tileset.getImage("Falling_water"), this, 0);
 		if(fullness == 3){
 			map.addTile(col,row, w);
+			waters.add(w);
 		}
 		else if (fullness == 2){
 			map.addTile(col,row, hw);
+			waters.add(hw);
 		}
 		else if (fullness == 1){
 			map.addTile(col,row, qw);
+			waters.add(qw);
 		}
 		else if (fullness == 0){
 			map.addTile(col,row, fw);
+			waters.add(fw);
 		}
 		//check to see if we should go down and if we can do that
 		if (row+1 < map.getTiles()[0].length && map.getTiles()[col][row+1] instanceof Water == false && !map.getTiles()[col][row+1].isSolid()){
@@ -245,7 +280,6 @@ public class Level {
 				water(col, row+1, map, 3);
 		}
 		//otherwise
-		
 		else if (row+1 < map.getTiles()[0].length && map.getTiles()[col][row+1] instanceof Water == false){
 			System.out.println(map.getTiles()[col+1][row] instanceof Water == false);
 			//right
@@ -275,6 +309,7 @@ public class Level {
 	private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
 		Gas g = new Gas(col, row, tileSize, tileset.getImage("Gas_one"), this, 0);
 		map.addTile(col, row, g);
+		gases.add(g);
 		placedThisRound.add(g);
 		numSquaresToFill -=1;
 		//add a loop above it to make all following blocks
@@ -292,10 +327,11 @@ public class Level {
 					// is it already gas? is it already solid?	
 					if (!map.getTiles()[col + moves[i][0]][row + moves[i][1]].isSolid() 
 						&& !(map.getTiles()[col + moves[i][0]][row + moves[i][1]] instanceof Gas)){
-							g = new Gas(col + moves[i][0], row + moves[i][1], tileSize, tileset.getImage("Gas_one"), this, 0);
-							map.addTile(col + moves[i][0], row + moves[i][1], g);
-							placedThisRound.add(g);
+							Gas differentGas = new Gas(col + moves[i][0], row + moves[i][1], tileSize, tileset.getImage("Gas_one"), this, 0);
+							map.addTile(col + moves[i][0], row + moves[i][1], differentGas);
+							placedThisRound.add(differentGas);
 							numSquaresToFill -=1;
+							gases.add(differentGas);
 							if (numSquaresToFill <= 0){
 								return;
 							}
@@ -304,8 +340,6 @@ public class Level {
 			}
 		}
 	}	
-
-
 	public void draw(Graphics g) {
 	   	 g.translate((int) -camera.getX(), (int) -camera.getY());
 	   	 // Draw the map
@@ -314,32 +348,6 @@ public class Level {
 	   			 Tile tile = map.getTiles()[x][y];
 	   			 if (tile == null)
 	   				 continue;
-	   			 if(tile instanceof Gas) {
-	   				 int adjacencyCount =0;
-	   				 for(int i=-1; i<2; i++) {
-	   					 for(int j =-1; j<2; j++) {
-	   						 if(j!=0 || i!=0) {
-	   							 if((x+i)>=0 && (x+i)<map.getTiles().length && (y+j)>=0 && (y+j)<map.getTiles()[x].length) {
-	   								 if(map.getTiles()[x+i][y+j] instanceof Gas) {
-	   									 adjacencyCount++;
-	   								 }
-	   							 }
-	   						 }
-	   					 }
-	   				 }
-	   				 if(adjacencyCount == 8) {
-	   					 ((Gas)(tile)).setIntensity(2);
-	   					 tile.setImage(tileset.getImage("GasThree"));
-	   				 }
-	   				 else if(adjacencyCount >5) {
-	   					 ((Gas)(tile)).setIntensity(1);
-	   					tile.setImage(tileset.getImage("GasTwo"));
-	   				 }
-	   				 else {
-	   					 ((Gas)(tile)).setIntensity(0);
-	   					tile.setImage(tileset.getImage("GasOne"));
-	   				 }
-	   			 }
 	   			 if (camera.isVisibleOnCamera(tile.getX(), tile.getY(), tile.getSize(), tile.getSize()))
 	   				 tile.draw(g);
 	   		 }
