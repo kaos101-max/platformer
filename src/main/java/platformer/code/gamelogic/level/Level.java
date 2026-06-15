@@ -281,7 +281,7 @@ public class Level {
 		//make the 3x3 shape of gas first 
 		// {col, row}
 		int[][] moves = {{0, -1}, {1, -1}, {-1, -1}, {1, 0}, {-1, 0}, {0, 1}, {1, 1}, {-1, 1}};
-		while(!placedThisRound.isEmpty() && numSquaresToFill>0){
+		while(!placedThisRound.isEmpty() && numSquaresToFill > 0){
 			row = placedThisRound.get(0).getRow();
 			col = placedThisRound.get(0).getCol();
 			placedThisRound.remove(0);
@@ -295,6 +295,7 @@ public class Level {
 							g = new Gas(col + moves[i][0], row + moves[i][1], tileSize, tileset.getImage("Gas_one"), this, 0);
 							map.addTile(col + moves[i][0], row + moves[i][1], g);
 							placedThisRound.add(g);
+							numSquaresToFill.add();
 						}
 				}
 			}
