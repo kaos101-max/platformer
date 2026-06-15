@@ -276,7 +276,7 @@ public class Level {
 		Gas g = new Gas(col, row, tileSize, tileset.getImage("Gas_one"), this, 0);
 		map.addTile(col, row, g);
 		placedThisRound.add(g);
-		 numSquaresToFill -=1;
+		numSquaresToFill -=1;
 		//add a loop above it to make all following blocks
 		//make the 3x3 shape of gas first 
 		// {col, row}
@@ -295,16 +295,16 @@ public class Level {
 							g = new Gas(col + moves[i][0], row + moves[i][1], tileSize, tileset.getImage("Gas_one"), this, 0);
 							map.addTile(col + moves[i][0], row + moves[i][1], g);
 							placedThisRound.add(g);
-							numSquaresToFill.add();
+							numSquaresToFill -=1;
+							if (numSquaresToFill <= 0){
+								return;
+							}
 						}
 				}
 			}
 		}
 	}	
-	private void Gas(int col, int row, int tileSize2, BufferedImage image, Level level, int i) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'Gas'");
-	}
+
 
 	public void draw(Graphics g) {
 	   	 g.translate((int) -camera.getX(), (int) -camera.getY());
@@ -315,7 +315,6 @@ public class Level {
 	   			 if (tile == null)
 	   				 continue;
 	   			 if(tile instanceof Gas) {
-	   				
 	   				 int adjacencyCount =0;
 	   				 for(int i=-1; i<2; i++) {
 	   					 for(int j =-1; j<2; j++) {
