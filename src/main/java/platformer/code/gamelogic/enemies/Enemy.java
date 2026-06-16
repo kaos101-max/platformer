@@ -19,6 +19,14 @@ public class Enemy extends PhysicsObject{
 		this.hitbox = new RectHitbox(this, 10, 10, width - 10, height - 10);
 		this.image = GameResources.enemy;
 	}
+
+
+	public Enemy(float x, float y, Level level, BufferedImage pic) {
+		super(x, y,(int)(level.getLevelData().getTileSize()*1.5), (int)(level.getLevelData().getTileSize()*1.5), level);
+		movementVector.x = walkSpeed;
+		this.hitbox = new RectHitbox(this, 10, 10, width - 10, height - 10);
+		this.image = pic;
+	}
 	public void setImage(BufferedImage newImg){
 		image = newImg;
 	}

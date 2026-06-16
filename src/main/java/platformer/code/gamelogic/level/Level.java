@@ -30,7 +30,6 @@ public class Level {
 
 	private LevelData leveldata;
 	private Map map;
-	private Enemy[] enemies;
 	public static Player player;
 	private Camera camera;
 
@@ -50,7 +49,7 @@ public class Level {
 	private Mapdata mapdata;
 	private int width;
 	private int height;
-	private int tileSize;
+	public int tileSize;
 	private Tileset tileset;
 	public static float GRAVITY = 70;
 	private long waterTimer = 0;
@@ -72,6 +71,7 @@ public class Level {
 	public void restartLevel() {
 		waters.clear();
 		gases.clear();
+		enemiesList.clear();
 		int[][] values = mapdata.getValues();
 		Tile[][] tiles = new Tile[width][height];
 
@@ -137,12 +137,10 @@ public class Level {
 			}
 
 		}
-		enemies = new Enemy[enemiesList.size()];
+	
 		map = new Map(width, height, tileSize, tiles);
 		camera = new Camera(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT, 0, map.getFullWidth(), map.getFullHeight());
-		for (int i = 0; i < enemiesList.size(); i++) {
-			enemies[i] = new Enemy(enemiesList.get(i).getX(), enemiesList.get(i).getY(), this);
-		}
+		
 		player = new Player(leveldata.getPlayerX() * map.getTileSize(), leveldata.getPlayerY() * map.getTileSize(),
 				this);
 		camera.setFocusedObject(player);
@@ -150,6 +148,12 @@ public class Level {
 		active = true;
 		playerDead = false;
 		playerWin = false;
+	}
+
+	public void addEnemy(float x, float y){
+		System.out.println("here");
+		enemiesList.add(new Enemy(x, y, this, tileset.getImage("Projectile")));
+
 	}
 
 	public void onPlayerDeath() {
@@ -234,9 +238,9 @@ public class Level {
 
 
 			// Update the enemies
-			for (int i = 0; i < enemies.length; i++) {
-				enemies[i].update(tslf);
-				if (player.getHitbox().isIntersecting(enemies[i].getHitbox())) {
+			for (int i = 0; i < enemiesList.size(); i++) {
+				enemiesList.get(i).update(tslf);
+				if (player.getHitbox().isIntersecting(enemiesList.get(i).getHitbox())) {
 					onPlayerDeath();
 				}
 			}
@@ -362,8 +366,8 @@ public class Level {
 	   	 }
 
 	   	 // Draw the enemies
-	   	 for (int i = 0; i < enemies.length; i++) {
-	   		 enemies[i].draw(g);
+	   	 for (int i = 0; i < enemiesList.size(); i++) {
+	   		 enemiesList.get(i).draw(g);
 	   	 }
 	   	 // Draw the player
 	   	 player.draw(g);
