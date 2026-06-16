@@ -19,6 +19,9 @@ public class Enemy extends PhysicsObject{
 		this.hitbox = new RectHitbox(this, 10, 10, width - 10, height - 10);
 		this.image = GameResources.enemy;
 	}
+	public void setImage(BufferedImage newImg){
+		image = newImg;
+	}
 	
 	@Override
 	public void update(float tslf) {
