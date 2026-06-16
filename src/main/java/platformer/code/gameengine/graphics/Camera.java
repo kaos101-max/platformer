@@ -103,7 +103,7 @@ public class Camera {
 		return false;
 		}
 		else{
-			if(x + width > position.x + 50 && x < position.x + this.width && y + height > position.y+300 && y < position.y + this.height) return true;
+			if(x + width > position.x + 50 && x < position.x + this.width && y + height > position.y + 150 && y < position.y + this.height - 150) return true;
 		return false;
 		}
 	}

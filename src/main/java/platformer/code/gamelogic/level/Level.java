@@ -17,6 +17,7 @@ import platformer.code.gamelogic.Main;
 import platformer.code.gamelogic.enemies.Enemy;
 import platformer.code.gamelogic.player.Player;
 import platformer.code.gamelogic.tiledMap.Map;
+import platformer.code.gamelogic.tiles.Creeper;
 import platformer.code.gamelogic.tiles.Flag;
 import platformer.code.gamelogic.tiles.Flower;
 import platformer.code.gamelogic.tiles.Gas;
@@ -42,7 +43,7 @@ public class Level {
 	//??
 	private ArrayList<Water> waters = new ArrayList<>();
 	private ArrayList<Gas> gases = new ArrayList<>();
-
+	private ArrayList<Creeper> creepers = new ArrayList<>();
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
 
@@ -70,6 +71,7 @@ public class Level {
 
 	public void restartLevel() {
 		waters.clear();
+		gases.clear();
 		int[][] values = mapdata.getValues();
 		Tile[][] tiles = new Tile[width][height];
 
@@ -129,7 +131,8 @@ public class Level {
 				else if (values[x][y] == 21)
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Quarter_water"), this, 1);
 				else if (values[x][y] == 22){
-					tiles[x][y] = new SolidTile(xPosition, yPosition, tileSize, tileset.getImage("Creeper"), this);
+					tiles[x][y] = new Creeper(xPosition, yPosition, tileSize, tileset.getImage("Creeper"), this);
+					creepers.add((Creeper)tiles[x][y]);
 				}
 			}
 
@@ -205,8 +208,7 @@ public class Level {
 			}
 			if(touchedWater){
 				player.isJumping = true;
-
-					player.movementVector.y -= (Level.GRAVITY * Level.GRAVITY) * tslf + 2;
+				player.movementVector.y -= (Level.GRAVITY * Level.GRAVITY) * tslf + 2;
 			}
 			//gas
 			boolean touchedGas = false;
@@ -238,7 +240,10 @@ public class Level {
 					onPlayerDeath();
 				}
 			}
-
+			for(Creeper c: creepers){
+				c.update(tslf);
+				//if
+			}
 			// Update the map
 			map.update(tslf);
 
